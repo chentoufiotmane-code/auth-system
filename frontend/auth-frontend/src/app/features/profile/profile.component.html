@@ -1,0 +1,32 @@
+
+<section class="page">
+  <span class="eyebrow">ACCOUNT</span>
+  <h1>My profile</h1>
+  <p>Your identity information from Keycloak.</p>
+
+  <article class="profile-card">
+    <div class="avatar">
+      {{ username.charAt(0).toUpperCase() }}
+    </div>
+
+    <h2>{{ fullName }}</h2>
+    <p class="email">{{ email }}</p>
+
+    <div class="details">
+      <div>
+        <span>Username</span>
+        <strong>{{ username }}</strong>
+      </div>
+
+      <div>
+        <span>Email</span>
+        <strong>{{ email }}</strong>
+      </div>
+
+      <div>
+        <span>Keycloak subject</span>
+        <strong class="subject">{{ subject }}</strong>
+      </div>
+    </div>
+  </article>
+</section>

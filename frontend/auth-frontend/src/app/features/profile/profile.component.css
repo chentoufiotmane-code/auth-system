@@ -1,0 +1,67 @@
+
+.page {
+  max-width: 800px;
+  margin: 36px auto;
+  padding: 24px;
+}
+
+.eyebrow {
+  color: #6366f1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+.page > p,
+.email {
+  color: #64748b;
+}
+
+.profile-card {
+  max-width: 560px;
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.details {
+  margin-top: 24px;
+}
+
+.details div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.details span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.details strong {
+  overflow-wrap: anywhere;
+}
+
+.subject {
+  font-size: 12px;
+}
