@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
-import { HttpInterceptorFn } from '@angular/common/http';
-import { from, switchMap } from 'rxjs';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { catchError, from, switchMap, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 
@@ -28,7 +28,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         },
       });
 
-      return next(authenticatedRequest);
+      return next(authenticatedRequest).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            console.warn('Access token rejected by server (401 Unauthorized). Resetting auth session.');
+            void auth.logout();
+          }
+          return throwError(() => error);
+        })
+      );
     })
   );
 };
