@@ -1,6 +1,5 @@
-
-import { Component } from '@angular/core';
-import { keycloak } from '../../core/auth/keycloak.config';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,19 +8,21 @@ import { keycloak } from '../../core/auth/keycloak.config';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent {
+  private readonly auth = inject(AuthService);
+
   get username(): string {
-    return keycloak.tokenParsed?.['preferred_username'] as string ?? 'Unknown';
+    return this.auth.username() || 'Unknown';
   }
 
   get email(): string {
-    return keycloak.tokenParsed?.['email'] as string ?? 'Not provided';
+    return this.auth.email() || 'Not provided';
   }
 
   get fullName(): string {
-    return keycloak.tokenParsed?.['name'] as string ?? this.username;
+    return this.auth.fullName() || this.username;
   }
 
   get subject(): string {
-    return keycloak.tokenParsed?.['sub'] as string ?? 'Unavailable';
+    return this.auth.subject() || 'Unavailable';
   }
 }

@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   RouterLink,
   RouterLinkActive,
@@ -153,5 +153,6 @@ import { AuthService } from './core/auth/auth.service';
   `],
 })
 export class AppComponent {
-  constructor(public auth: AuthService) {}
+  readonly auth = inject(AuthService);
 }
+
