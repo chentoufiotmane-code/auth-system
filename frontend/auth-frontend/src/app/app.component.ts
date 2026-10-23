@@ -34,7 +34,6 @@ import { AuthService } from './core/auth/auth.service';
           </a>
         }
       </nav>
-
       <div class="account">
         @if (auth.isAuthenticated()) {
           <span class="username">
@@ -42,6 +41,9 @@ import { AuthService } from './core/auth/auth.service';
           </span>
           <button (click)="auth.logout()">Logout</button>
         } @else {
+          <button class="register-btn" (click)="auth.register()">
+            Register
+          </button>
           <button (click)="auth.login()">Login</button>
         }
       </div>
@@ -119,6 +121,16 @@ import { AuthService } from './core/auth/auth.service';
       color: white;
       font-weight: 600;
       cursor: pointer;
+    }
+
+    .register-btn {
+      background: white;
+      color: #4f46e5;
+      border: 1px solid #c7d2fe;
+    }
+
+    .register-btn:hover {
+      background: #eef2ff;
     }
 
     .username {

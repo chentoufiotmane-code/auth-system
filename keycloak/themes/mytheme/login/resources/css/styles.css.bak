@@ -1,0 +1,198 @@
+
+/* Page background */
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background: #eef2f7;
+}
+
+/* Login form card */
+.pf-v5-c-login__main,
+.login-pf-page .card-pf {
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    border-radius: 6px;
+}
+
+/* Sign-in button */
+input[type="submit"],
+button[type="submit"] {
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* Improve the realm name visibility */
+.pf-v5-c-login__main-header,
+#kc-header,
+#kc-header-wrapper {
+    color: #1e293b;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .pf-v5-c-login__main,
+    .login-pf-page .card-pf {
+        margin: 16px;
+        width: auto;
+    }
+}
+
+
+/* AuthPlatform branding */
+#kc-header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #102a56;
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+    text-transform: none;
+}
+
+/* Logo before the realm name */
+#kc-header-wrapper::before {
+    content: "";
+    display: inline-block;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    background-image: url("../img/logo.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* Page titles: login, registration, and recovery */
+#kc-page-title {
+    color: #102a56;
+    font-size: 28px;
+    font-weight: 750;
+    letter-spacing: -0.6px;
+    line-height: 1.3;
+}
+
+/* Supporting text */
+#kc-info-wrapper,
+#kc-registration,
+#kc-form-options {
+    color: #64748b;
+}
+
+/* Branding on smaller screens */
+@media (max-width: 600px) {
+    #kc-header-wrapper {
+        font-size: 19px;
+    }
+
+    #kc-header-wrapper::before {
+        width: 38px;
+        height: 38px;
+    }
+
+    #kc-page-title {
+        font-size: 24px;
+    }
+}
+
+
+/* ===== AuthPlatform: split-screen portal ===== */
+
+.pf-v5-c-login {
+    min-height: 100vh;
+    padding: 32px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #edf3fc;
+}
+
+.pf-v5-c-login__container {
+    width: 100%;
+    max-width: 1180px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    align-items: stretch;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 20px 60px rgba(16, 42, 86, 0.15);
+}
+
+/* Left-side campus panel */
+.pf-v5-c-login__container::before {
+    content: "AuthPlatform\A\A Your Digital Gateway\A\A Access your applications, manage your account and stay connected with our platform.";
+    white-space: pre-line;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 650px;
+    padding: 48px;
+    color: #fff;
+    font-size: 17px;
+    line-height: 1.8;
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(8, 44, 102, 0.30),
+                    rgba(8, 44, 102, 0.90)
+            ),
+            url("../img/campus.jpg") center / cover no-repeat;
+}
+
+/* Right-side Keycloak form */
+.pf-v5-c-login__main {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    padding: 44px;
+    align-self: center;
+    background: #fff;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* Title */
+.pf-v5-c-login__main-header h1,
+#kc-page-title {
+    color: #102a56;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* Responsive layout */
+@media (max-width: 760px) {
+    .pf-v5-c-login {
+        padding: 16px;
+    }
+
+    .pf-v5-c-login__container {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pf-v5-c-login__container::before {
+        min-height: 190px;
+        padding: 24px;
+        font-size: 15px;
+    }
+
+    .pf-v5-c-login__main {
+        padding: 24px;
+    }
+}
+
+

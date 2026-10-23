@@ -53,6 +53,13 @@ export class AuthService {
       return false;
     }
   }
+  register(targetUrl?: string): Promise<void> {
+    const redirectUri = targetUrl
+      ? `${window.location.origin}${targetUrl}`
+      : window.location.href;
+
+    return this.keycloak.register({ redirectUri });
+  }
 
   login(targetUrl?: string): Promise<void> {
     const redirectUri = targetUrl

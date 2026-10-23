@@ -35,6 +35,8 @@ services:
 
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - "C:/Users/Otmane/Desktop/WorkSpace/auth-platform/keycloak/themes:/opt/keycloak/themes"
 
     ports:
       - "8083:8080"
