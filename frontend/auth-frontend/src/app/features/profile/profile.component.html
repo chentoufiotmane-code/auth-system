@@ -1,32 +1,203 @@
+<div class="profile-page">
+  <div class="profile-container">
 
-<section class="page">
-  <span class="eyebrow">ACCOUNT</span>
-  <h1>My profile</h1>
-  <p>Your identity information from Keycloak.</p>
+    <header class="page-header">
+      <div class="header-icon">🎓</div>
+      <div>
+        <h1>Student Profile</h1>
+        <p>Complete your personal and academic information.</p>
+      </div>
+    </header>
 
-  <article class="profile-card">
-    <div class="avatar">
-      {{ username.charAt(0).toUpperCase() }}
+    <div *ngIf="loading" class="message info">
+      Loading your profile...
     </div>
 
-    <h2>{{ fullName }}</h2>
-    <p class="email">{{ email }}</p>
+    <form
+      *ngIf="!loading"
+      [formGroup]="profileForm"
+      (ngSubmit)="saveProfile()"
+      novalidate
+    >
+      <!-- PERSONAL INFORMATION -->
+      <section class="form-section">
+        <div class="section-heading">
+          <span class="section-number">01</span>
+          <div>
+            <h2>Personal information</h2>
+            <p>Tell us about yourself.</p>
+          </div>
+        </div>
 
-    <div class="details">
-      <div>
-        <span>Username</span>
-        <strong>{{ username }}</strong>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="firstName">First name *</label>
+            <input id="firstName" type="text" formControlName="firstName"
+                   placeholder="Enter your first name" />
+            <small class="field-error"
+                   *ngIf="profileForm.controls.firstName.touched &&
+                     profileForm.controls.firstName.invalid">
+              First name is required (maximum 100 characters).
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="lastName">Last name *</label>
+            <input id="lastName" type="text" formControlName="lastName"
+                   placeholder="Enter your last name" />
+            <small class="field-error"
+                   *ngIf="profileForm.controls.lastName.touched &&
+                     profileForm.controls.lastName.invalid">
+              Last name is required (maximum 100 characters).
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email address *</label>
+            <input id="email" type="email" formControlName="email"
+                   placeholder="student@example.com" />
+            <small class="field-error"
+                   *ngIf="profileForm.controls.email.touched &&
+                     profileForm.controls.email.invalid">
+              Enter a valid email address.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" formControlName="phone"
+                   placeholder="+212 6XX XX XX XX" />
+          </div>
+
+          <div class="form-field">
+            <label for="dateOfBirth">Date of birth</label>
+            <input id="dateOfBirth" type="date"
+                   formControlName="dateOfBirth" />
+          </div>
+
+          <div class="form-field full-width">
+            <label for="address">Address</label>
+            <input id="address" type="text" formControlName="address"
+                   placeholder="City, neighborhood, address..." />
+          </div>
+        </div>
+      </section>
+
+      <!-- ACADEMIC INFORMATION -->
+      <section class="form-section">
+        <div class="section-heading">
+          <span class="section-number">02</span>
+          <div>
+            <h2>Academic information</h2>
+            <p>Provide your Bac+2 diploma and your yearly grades.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="diplomaType">Diploma type *</label>
+            <select id="diplomaType" formControlName="diplomaType">
+              <option value="">Select your diploma</option>
+              <option *ngFor="let diploma of diplomaTypes"
+                      [value]="diploma.value">
+                {{ diploma.label }}
+              </option>
+            </select>
+            <small class="field-error"
+                   *ngIf="profileForm.controls.diplomaType.touched &&
+                     profileForm.controls.diplomaType.invalid">
+              Please select your diploma type.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="diplomaName">Diploma name</label>
+            <input id="diplomaName" type="text"
+                   formControlName="diplomaName"
+                   placeholder="e.g. Technicien Spécialisé" />
+          </div>
+
+          <div class="form-field full-width">
+            <label for="institution">Institution</label>
+            <input id="institution" type="text"
+                   formControlName="institution"
+                   placeholder="Name of your school or institute" />
+          </div>
+
+          <div class="form-field">
+            <label for="graduationYear">Graduation year</label>
+            <input id="graduationYear" type="number"
+                   formControlName="graduationYear"
+                   min="1950" max="2100" placeholder="2025" />
+            <small class="field-error"
+                   *ngIf="profileForm.controls.graduationYear.touched &&
+                     profileForm.controls.graduationYear.invalid">
+              Enter a year between 1950 and 2100.
+            </small>
+          </div>
+        </div>
+
+        <div class="grades-heading">
+          <h3>Academic grades</h3>
+          <p>Enter your yearly average out of 20.</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="firstYearGrade">First-year average</label>
+            <div class="grade-input">
+              <input id="firstYearGrade" type="number"
+                     formControlName="firstYearGrade"
+                     min="0" max="20" step="0.01"
+                     placeholder="14.50" />
+              <span>/ 20</span>
+            </div>
+            <small class="field-error"
+                   *ngIf="profileForm.controls.firstYearGrade.touched &&
+                     profileForm.controls.firstYearGrade.invalid">
+              Grade must be between 0 and 20.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="secondYearGrade">Second-year average</label>
+            <div class="grade-input">
+              <input id="secondYearGrade" type="number"
+                     formControlName="secondYearGrade"
+                     min="0" max="20" step="0.01"
+                     placeholder="15.25" />
+              <span>/ 20</span>
+            </div>
+            <small class="field-error"
+                   *ngIf="profileForm.controls.secondYearGrade.touched &&
+                     profileForm.controls.secondYearGrade.invalid">
+              Grade must be between 0 and 20.
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATUS MESSAGES -->
+      <div *ngIf="successMessage" class="message success" role="status">
+        {{ successMessage }}
       </div>
 
-      <div>
-        <span>Email</span>
-        <strong>{{ email }}</strong>
+      <div *ngIf="errorMessage" class="message error" role="alert">
+        {{ errorMessage }}
       </div>
 
-      <div>
-        <span>Keycloak subject</span>
-        <strong class="subject">{{ subject }}</strong>
+      <!-- ACTIONS -->
+      <div class="form-actions">
+        <p><span>*</span> Required fields</p>
+
+        <button type="submit" [disabled]="saving">
+          <span *ngIf="!saving">
+            {{ profileExists ? 'Save changes' : 'Create profile' }}
+          </span>
+          <span *ngIf="saving">Saving...</span>
+        </button>
       </div>
-    </div>
-  </article>
-</section>
+    </form>
+
+  </div>
+</div>

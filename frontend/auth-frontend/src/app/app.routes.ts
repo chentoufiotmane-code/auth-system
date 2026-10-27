@@ -19,7 +19,7 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
   {
     path: 'admin',
