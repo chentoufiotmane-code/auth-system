@@ -22,4 +22,6 @@ export interface StudentProfile {
   secondYearGrade: number | null;
   createdAt?: string;
   updatedAt?: string;
+  documentName?: string | null;
+  documentSize?: number | null;
 }

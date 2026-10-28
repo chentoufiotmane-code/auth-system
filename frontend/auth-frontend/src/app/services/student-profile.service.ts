@@ -33,4 +33,21 @@ export class StudentProfileService {
       this.apiUrl,
       profile
     );
-  }}
+  }
+  uploadDocument(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<void>(
+      `${this.apiUrl}/document`,
+      formData
+    );
+  }
+
+  getDocument(): Observable<Blob> {
+    return this.http.get(
+      `${this.apiUrl}/document`,
+      { responseType: 'blob' }
+    );
+  }
+}

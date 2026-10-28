@@ -258,3 +258,36 @@
     width: 100%;
   }
 }
+
+.document-section {
+  margin-top: 24px;
+}
+
+.file-hint,
+.selected-file {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.selected-file {
+  overflow-wrap: anywhere;
+  margin-top: 16px;
+}
+
+.uploaded-document {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+}
+
+.pdf-preview {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.pdf-preview iframe {
+  display: block;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+}

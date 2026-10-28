@@ -59,6 +59,15 @@ public class StudentProfile {
     @Column(precision = 4, scale = 2)
     private BigDecimal secondYearGrade;
 
+    @Column(name = "document_name")
+    private String documentName;
+
+    @Column(name = "document_data", columnDefinition = "bytea")
+    private byte[] documentData;
+
+    @Column(name = "document_size")
+    private Long documentSize;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -186,6 +195,30 @@ public class StudentProfile {
 
     public void setSecondYearGrade(BigDecimal secondYearGrade) {
         this.secondYearGrade = secondYearGrade;
+    }
+
+    public String getDocumentName() {
+        return documentName;
+    }
+
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
+    }
+
+    public byte[] getDocumentData() {
+        return documentData;
+    }
+
+    public void setDocumentData(byte[] documentData) {
+        this.documentData = documentData;
+    }
+
+    public Long getDocumentSize() {
+        return documentSize;
+    }
+
+    public void setDocumentSize(Long documentSize) {
+        this.documentSize = documentSize;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -4,11 +4,11 @@ package com.authplatform.authservice.student;
 import com.authplatform.authservice.student.dto.StudentProfileRequest;
 import com.authplatform.authservice.student.dto.StudentProfileResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/student/profile")
@@ -46,5 +46,34 @@ public class StudentProfileController {
             @Valid @RequestBody StudentProfileRequest request) {
 
         return service.updateMyProfile(jwt.getSubject(), request);
+    }
+
+    @PostMapping("/document")
+    public ResponseEntity<Void> uploadDocument(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam("file") MultipartFile file) {
+
+        service.uploadDocument(jwt.getSubject(), file);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/document")
+    public ResponseEntity<byte[]> getDocument(
+            @AuthenticationPrincipal Jwt jwt) {
+
+        StudentProfile profile =
+                service.getDocumentByKeycloakId(jwt.getSubject());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline()
+                                .filename("student-document.pdf")
+                                .build()
+                                .toString()
+                )
+                .body(profile.getDocumentData());
     }
 }
