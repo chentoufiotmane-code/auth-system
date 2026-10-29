@@ -43,6 +43,8 @@ public class StudentProfileMapper {
                 profile.getGraduationYear(),
                 profile.getFirstYearGrade(),
                 profile.getSecondYearGrade(),
+                profile.getDocumentName(),
+                profile.getDocumentData(),
                 profile.getCreatedAt(),
                 profile.getUpdatedAt()
         );

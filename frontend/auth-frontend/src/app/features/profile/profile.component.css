@@ -1,3 +1,4 @@
+
 :host {
   display: block;
   min-height: 100%;
@@ -5,6 +6,10 @@
   color: #1e293b;
   font-family: Arial, sans-serif;
 }
+
+/* =========================
+   Page layout
+========================= */
 
 .profile-page {
   padding: 40px 20px;
@@ -25,6 +30,7 @@
 .header-icon {
   display: grid;
   place-items: center;
+  flex-shrink: 0;
   width: 58px;
   height: 58px;
   border-radius: 16px;
@@ -44,7 +50,12 @@
   margin: 0;
   color: #64748b;
   font-size: 14px;
+  line-height: 1.6;
 }
+
+/* =========================
+   Form sections
+========================= */
 
 .form-section {
   margin-bottom: 24px;
@@ -80,6 +91,10 @@
   font-size: 20px;
   color: #142c55;
 }
+
+/* =========================
+   Form grid and fields
+========================= */
 
 .form-grid {
   display: grid;
@@ -130,6 +145,22 @@
   box-shadow: 0 0 0 3px rgb(50 104 200 / 12%);
 }
 
+.form-field input:disabled,
+.form-field select:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================
+   Academic grades
+========================= */
+
 .grades-heading {
   margin: 30px 0 20px;
   padding-top: 24px;
@@ -158,57 +189,178 @@
   font-size: 14px;
 }
 
-.field-error {
-  color: #dc2626;
-  font-size: 12px;
-  line-height: 1.4;
+/* =========================
+   Wizard progress
+========================= */
+
+.wizard-progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 24px 0;
 }
 
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #64748b;
+}
+
+.wizard-step-number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  font-weight: 700;
+}
+
+.wizard-step-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wizard-step.active {
+  border-color: #2563eb;
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.wizard-step.active .wizard-step-number {
+  color: #fff;
+  background: #2563eb;
+}
+
+.wizard-step.completed .wizard-step-number {
+  color: #fff;
+  background: #16a34a;
+}
+
+/* =========================
+   ALL BUTTONS — base style
+========================= */
+
+button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 20px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: #2458b5;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  background: #19458f;
+}
+
+button:focus-visible {
+  outline: 3px solid rgb(37 99 235 / 30%);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Primary actions: Continue, Confirm and save */
+
+.wizard-actions button[type="submit"],
+.form-actions button:not(.secondary-button),
+.wizard-action-buttons button:not(.secondary-button) {
+  background: #2458b5;
+  color: #fff;
+  border-color: #2458b5;
+}
+
+.wizard-actions button[type="submit"]:hover:not(:disabled),
+.form-actions button:not(.secondary-button):hover:not(:disabled),
+.wizard-action-buttons button:not(.secondary-button):hover:not(:disabled) {
+  background: #19458f;
+  border-color: #19458f;
+}
+
+/* Secondary actions: Back, Preview PDF, etc. */
+
+button.secondary-button {
+  background: #fff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+button.secondary-button:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #142c55;
+}
+
+/* =========================
+   Wizard navigation
+========================= */
+
+.wizard-actions,
 .form-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 10px 0 25px;
+  margin-top: 24px;
 }
 
-.form-actions p {
+.wizard-actions > p,
+.form-actions > p {
   margin: 0;
   color: #64748b;
   font-size: 13px;
 }
 
-.form-actions p span {
+.wizard-actions > p span,
+.form-actions > p span {
   color: #dc2626;
 }
 
-.form-actions button {
-  min-height: 46px;
-  padding: 0 25px;
-  border: none;
-  border-radius: 9px;
-  background: #2458b5;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
+.wizard-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
-.form-actions button:hover:not(:disabled) {
-  background: #19458f;
-}
-
-.form-actions button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+/* =========================
+   Messages
+========================= */
 
 .message {
   margin: 20px 0;
   padding: 14px 16px;
   border-radius: 9px;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .success {
@@ -228,36 +380,9 @@
   color: #1d4ed8;
 }
 
-@media (max-width: 650px) {
-  .profile-page {
-    padding: 24px 14px;
-  }
-
-  .page-header h1 {
-    font-size: 24px;
-  }
-
-  .form-section {
-    padding: 22px 18px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .full-width {
-    grid-column: auto;
-  }
-
-  .form-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .form-actions button {
-    width: 100%;
-  }
-}
+/* =========================
+   Supporting document
+========================= */
 
 .document-section {
   margin-top: 24px;
@@ -267,6 +392,12 @@
 .selected-file {
   color: #64748b;
   font-size: 13px;
+  line-height: 1.5;
+}
+
+.file-hint {
+  display: block;
+  margin-top: 8px;
 }
 
 .selected-file {
@@ -281,13 +412,156 @@
   border-radius: 10px;
 }
 
+.uploaded-document h3 {
+  margin-top: 0;
+  color: #142c55;
+}
+
 .pdf-preview {
-  margin-top: 16px;
   width: 100%;
+  margin-top: 20px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
 }
 
 .pdf-preview iframe {
   display: block;
-  border: 1px solid #dbe2ea;
-  border-radius: 8px;
+  width: 100%;
+  border: 0;
+}
+
+/* =========================
+   Review page
+========================= */
+
+.review-group {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.review-group h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #142c55;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.review-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.review-grid > div > span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.review-grid strong {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+button.text-button {
+  min-height: auto;
+  margin-top: 16px;
+  padding: 4px 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #2563eb;
+  font-weight: 600;
+  text-align: left;
+}
+
+button.text-button:hover:not(:disabled) {
+  background: transparent;
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* =========================
+   Responsive layout
+========================= */
+
+@media (max-width: 700px) {
+  .profile-page {
+    padding: 24px 14px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .form-section {
+    padding: 22px 18px;
+  }
+
+  .form-grid,
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .wizard-progress {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wizard-step {
+    padding: 9px;
+  }
+
+  .wizard-step-label {
+    font-size: 12px;
+  }
+
+  .wizard-actions,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .wizard-action-buttons {
+    width: 100%;
+  }
+
+  .wizard-action-buttons button,
+  .wizard-actions button,
+  .form-actions button {
+    flex: 1;
+  }
+
+  .wizard-action-buttons button {
+    min-width: 0;
+  }
+
+  .form-actions > button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .wizard-progress {
+    grid-template-columns: 1fr;
+  }
+
+  .wizard-action-buttons {
+    flex-direction: column;
+  }
+
+  .wizard-action-buttons button {
+    width: 100%;
+  }
 }

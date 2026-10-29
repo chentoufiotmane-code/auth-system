@@ -20,6 +20,8 @@ public record StudentProfileResponse(
         Integer graduationYear,
         BigDecimal firstYearGrade,
         BigDecimal secondYearGrade,
+        String documentName,
+        byte[] documentData,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

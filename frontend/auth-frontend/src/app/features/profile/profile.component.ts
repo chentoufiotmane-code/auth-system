@@ -1,9 +1,7 @@
-
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -21,30 +19,39 @@ import { StudentProfileService } from '../../services/student-profile.service';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-
   private readonly sanitizer = inject(DomSanitizer);
-
-  documentExists = false;
-  documentName: string | null = null;
-  documentPreviewUrl: SafeResourceUrl | null = null;
-
-  private documentObjectUrl: string | null = null;
-
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(StudentProfileService);
 
   readonly maxFileSize = 2 * 1024 * 1024;
+  readonly totalSteps = 4;
 
-  loading = true;
-  saving = false;
-  uploading = false;
-  profileExists = false;
+  currentStep = 1;
 
-  successMessage = '';
-  errorMessage = '';
-  documentMessage = '';
+  readonly steps = [
+    { number: 1, label: 'Personal' },
+    { number: 2, label: 'Academic' },
+    { number: 3, label: 'Document' },
+    { number: 4, label: 'Review' }
+  ];
 
-  selectedFile: File | null = null;
+  readonly personalControls = [
+    'firstName',
+    'lastName',
+    'email',
+    'phone',
+    'dateOfBirth',
+    'address'
+  ] as const;
+
+  readonly academicControls = [
+    'diplomaType',
+    'diplomaName',
+    'institution',
+    'graduationYear',
+    'firstYearGrade',
+    'secondYearGrade'
+  ] as const;
 
   readonly diplomaTypes = [
     { value: 'BTS', label: 'BTS' },
@@ -85,30 +92,58 @@ export class ProfileComponent implements OnInit, OnDestroy {
     ])
   });
 
+  loading = true;
+  saving = false;
+  uploading = false;
+  profileExists = false;
+
+  documentExists = false;
+  documentName: string | null = null;
+  documentPreviewUrl: SafeResourceUrl | null = null;
+  selectedFile: File | null = null;
+
+  successMessage = '';
+  errorMessage = '';
+  documentMessage = '';
+
+  private documentObjectUrl: string | null = null;
+
   ngOnInit(): void {
     this.loadProfile();
+  }
+
+  ngOnDestroy(): void {
+    this.clearDocumentPreview();
+  }
+
+  get diplomaTypeLabel(): string {
+    const value = this.profileForm.controls.diplomaType.value;
+    return this.diplomaTypes.find(item => item.value === value)?.label ?? 'Not provided';
   }
 
   loadProfile(): void {
     this.loading = true;
     this.errorMessage = '';
 
-
     this.profileService.getMyProfile().subscribe({
-      next: (profile) => {
+      next: profile => {
         this.profileExists = true;
         this.documentExists = !!profile.documentName;
         this.documentName = profile.documentName ?? null;
+
         this.profileForm.patchValue({
           ...profile,
           dateOfBirth: profile.dateOfBirth ?? '',
           graduationYear: profile.graduationYear ?? null,
           firstYearGrade: profile.firstYearGrade ?? null,
           secondYearGrade: profile.secondYearGrade ?? null
-
         });
 
         this.loading = false;
+
+        if (this.documentExists) {
+          this.previewDocument();
+        }
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 404) {
@@ -122,12 +157,81 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveProfile(): void {
+  nextStep(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    if (this.currentStep === 1) {
+      if (!this.validateControls(this.personalControls)) {
+        return;
+      }
+
+      this.currentStep = 2;
+      return;
+    }
+
+    if (this.currentStep === 2) {
+      if (!this.validateControls(this.academicControls)) {
+        return;
+      }
+
+      // Save the profile before enabling document upload.
+      this.saveProfile(() => {
+        this.currentStep = 3;
+      });
+      return;
+    }
+
+    if (this.currentStep === 3) {
+      if (!this.documentExists) {
+        this.documentMessage = 'Please upload your supporting PDF before continuing.';
+        return;
+      }
+
+      this.currentStep = 4;
+    }
+  }
+
+  previousStep(): void {
+    if (this.currentStep > 1 && !this.saving && !this.uploading) {
+      this.currentStep--;
+      this.successMessage = '';
+      this.errorMessage = '';
+    }
+  }
+
+  goToStep(step: number): void {
+    if (step < 1 || step > this.steps.length) {
+      return;
+    }
+
+    this.currentStep = step;
+  }
+
+  private validateControls(
+    controls: readonly (keyof typeof this.profileForm.controls)[]
+  ): boolean {
+    let valid = true;
+
+    for (const name of controls) {
+      const control = this.profileForm.controls[name];
+      control.markAsTouched();
+
+      if (control.invalid) {
+        valid = false;
+      }
+    }
+
+    return valid;
+  }
+
+  saveProfile(onSuccess?: () => void): void {
     this.successMessage = '';
     this.errorMessage = '';
 
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
+      this.errorMessage = 'Please check the highlighted fields before saving.';
       return;
     }
 
@@ -159,6 +263,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.profileExists = true;
         this.successMessage = 'Profile saved successfully.';
         this.saving = false;
+        onSuccess?.();
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 409) {
@@ -190,7 +295,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!file.name.toLowerCase().endsWith('.pdf')) {
+    if (!file.name.toLowerCase().endsWith('.pdf') || file.type && file.type !== 'application/pdf') {
       this.documentMessage = 'Only PDF files are allowed.';
       input.value = '';
       return;
@@ -216,43 +321,38 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.documentMessage = '';
 
     if (!this.profileExists) {
-      this.documentMessage =
-        'Save your student profile before uploading a document.';
+      this.documentMessage = 'Save your student profile before uploading a document.';
       return;
     }
 
-    if (!this.selectedFile) {
+    const file = this.selectedFile;
+
+    if (!file) {
       this.documentMessage = 'Please select a PDF file first.';
       return;
     }
 
+    const fileName = file.name;
     this.uploading = true;
 
-    this.profileService.uploadDocument(this.selectedFile).subscribe({
+    this.profileService.uploadDocument(file).subscribe({
       next: () => {
+        this.documentExists = true;
+        this.documentName = fileName;
         this.documentMessage = 'Document uploaded successfully.';
         this.selectedFile = null;
         this.uploading = false;
-
-        this.documentExists = true;
-        this.documentName = this.selectedFile ?? null;
-        this.documentMessage = 'Document uploaded successfully.';
-
         this.previewDocument();
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 400) {
-          this.documentMessage =
-            'The PDF is invalid or exceeds the 2 MB limit.';
+          this.documentMessage = 'The PDF is invalid or exceeds the 2 MB limit.';
         } else if (error.status === 404) {
-          this.documentMessage =
-            'Please save your student profile before uploading.';
+          this.documentMessage = 'Please save your student profile before uploading.';
         } else if (error.status === 401 || error.status === 403) {
-          this.documentMessage =
-            'Your session is not authorized. Please log in again.';
+          this.documentMessage = 'Your session is not authorized. Please log in again.';
         } else {
-          this.documentMessage =
-            'Document upload failed. Please try again.';
+          this.documentMessage = 'Document upload failed. Please try again.';
         }
 
         this.uploading = false;
@@ -270,15 +370,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         );
 
         this.documentPreviewUrl =
-          this.sanitizer.bypassSecurityTrustResourceUrl(
-            this.documentObjectUrl
-          );
+          this.sanitizer.bypassSecurityTrustResourceUrl(this.documentObjectUrl);
       },
-      error: (error) => {
-        this.errorMessage =
-          error.status === 404
-            ? 'No document has been uploaded yet.'
-            : 'Unable to preview the document.';
+      error: (error: HttpErrorResponse) => {
+        this.errorMessage = error.status === 404
+          ? 'No document has been uploaded yet.'
+          : 'Unable to preview the document.';
       }
     });
   }
@@ -290,9 +387,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.documentPreviewUrl = null;
-  }
-
-  ngOnDestroy(): void {
-    this.clearDocumentPreview();
   }
 }

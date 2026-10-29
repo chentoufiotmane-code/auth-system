@@ -34,6 +34,7 @@ export class StudentProfileService {
       profile
     );
   }
+
   uploadDocument(file: File) {
     const formData = new FormData();
     formData.append('file', file);
