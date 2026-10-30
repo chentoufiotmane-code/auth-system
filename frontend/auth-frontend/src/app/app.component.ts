@@ -25,10 +25,6 @@ import { AuthService } from './core/auth/auth.service';
         </a>
 
         @if (auth.isAuthenticated()) {
-          <a routerLink="/dashboard" routerLinkActive="active">
-            Dashboard
-          </a>
-
           <a routerLink="/profile" routerLinkActive="active">
             Profile
           </a>
